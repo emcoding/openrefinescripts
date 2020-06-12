@@ -1,0 +1,30 @@
+// Extract the uitgever. 
+// De column bestaat uit samengevoegde (cellen? check), met separator '*'.
+// En alle records gebruiken consequent "Uitg." voor de naam van de uitgeverij. 
+//Daardoor kunnen we het pattern "*Uitg." gebruiken om de column te splitsen.
+// Daarna hernoemen we de nieuwe column.
+// Dit moet in 1 stap kunnen met functie Column -> edit column -> "Add column based on this column" 
+
+[
+  {
+    "op": "core/column-split",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Column 3",
+    "guessCellType": true,
+    "removeOriginalColumn": true,
+    "mode": "separator",
+    "separator": "*Uitg.",
+    "regex": false,
+    "maxColumns": 2,
+    "description": "Split column Column 3 by separator"
+  },
+  {
+    "op": "core/column-rename",
+    "oldColumnName": "Column 3 2",
+    "newColumnName": "Uitgever",
+    "description": "Rename column Column 3 2 to Uitgever"
+  }
+]
