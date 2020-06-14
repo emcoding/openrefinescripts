@@ -1,0 +1,92 @@
+// Dit is snel gedaan, in plaats van netjes. Refactoren.
+// 
+
+// 1 Create new column based on 2, by finding "ISBN" plus (nummers of een streepje)
+// 2 en 3 Dan ISBN weg uit col 1 EN col 2, want het staat in beide nog
+
+
+// 4 5 6 Zelfde met EAN
+
+// Het kan dus mooier, maar dit was snel omdat het basically dezelfde formule steeds herhaalt. 
+
+
+[
+  {
+    "op": "core/column-addition",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "baseColumnName": "Column 2",
+    "expression": "grel:value.find(/(\\|ISBN [\\d|-]*)/ )[0]",
+    "onError": "set-to-blank",
+    "newColumnName": "ISBN",
+    "columnInsertIndex": 2,
+    "description": "Create column ISBN at index 2 based on column Column 2 using expression grel:value.find(/(\\|ISBN [\\d|-]*)/ )[0]"
+  },
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "Column 2",
+    "expression": "grel:value.replace(/(\\|ISBN [\\d|-]*)/, \"\" )",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "Text transform on cells in column Column 2 using expression grel:value.replace(/(\\|ISBN [\\d|-]*)/, \"\" )"
+  },
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "ISBN",
+    "expression": "grel:value.replace(/\\|ISBN( |-?)/, \"\" )",
+    "onError": "set-to-blank",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "Text transform on cells in column ISBN using expression grel:value.replace(/\\|ISBN( |-?)/, \"\" )"
+  },
+  {
+    "op": "core/column-addition",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "baseColumnName": "Column 2",
+    "expression": "grel:value.find(/(\\|EAN [\\d|-]*)/ )[0]",
+    "onError": "set-to-blank",
+    "newColumnName": "EAN",
+    "columnInsertIndex": 2,
+    "description": "Create column EAN at index 2 based on column Column 2 using expression grel:value.find(/(\\|EAN [\\d|-]*)/ )[0]"
+  },
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "EAN",
+    "expression": "grel:value.replace(\"|EAN\", \"\")",
+    "onError": "set-to-blank",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "Text transform on cells in column EAN using expression grel:value.replace(\"|EAN\", \"\")"
+  },
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "Column 2",
+    "expression": "grel:value.replace(/(\\|EAN \\d*\\.?)/, \"\" )",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "Text transform on cells in column Column 2 using expression grel:value.replace(/(\\|EAN \\d*\\.?)/, \"\" )"
+  }
+]
