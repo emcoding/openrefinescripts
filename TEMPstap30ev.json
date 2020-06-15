@@ -1,0 +1,44 @@
+[
+  {
+    "op": "core/column-addition",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "baseColumnName": "Titel",
+    "expression": "grel:if(isNonBlank(row.record.cells[\"Titel\"].value[2]), row.record.cells[\"Titel\"].value[1,4].join(\" *\"), '')",
+    "onError": "set-to-blank",
+    "newColumnName": "f",
+    "columnInsertIndex": 2,
+    "description": "Create column f at index 2 based on column Titel using expression grel:if(isNonBlank(row.record.cells[\"Titel\"].value[2]), row.record.cells[\"Titel\"].value[1,4].join(\" \"), '')"
+  },
+  {
+    "op": "core/blank-down",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "f",
+    "description": "Blank down cells in column f"
+  },
+  {
+    "op": "core/multivalued-cell-join",
+    "columnName": "Titel",
+    "keyColumnName": "Column 1",
+    "separator": "**",
+    "description": "Join multi-valued cells in column Titel"
+  },
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "Titel",
+    "expression": "grel:value.replace(/(\\*\\*.*)/, \"\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "Text transform on cells in column Titel using expression grel:value.replace(/(\\*\\*.*)/, \"\")"
+  }
+]
