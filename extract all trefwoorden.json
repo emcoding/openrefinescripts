@@ -1,0 +1,25 @@
+// alles achter "Trefwoord:" gaat naar een nieuwe col Trefwoord
+
+//Uitleg
+//value.partition(\"Trefwoord:\")[-1].chomp(\".\")"
+//: deel de zin op in 2 delen, 1e = "Trefwoord:", 2e= wat achter 1e staat.
+// (DAt kon in vorige ronde niet, omdat ik toen de cellen in column 1 al gecombineerd had, dus er stond soms meer 
+// dan alleen een trefwoord achter "Trefwoord:"
+// chomp haalt de punt achter het trefwoord weg
+
+
+[
+  {
+    "op": "core/column-addition",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "baseColumnName": "Column 2",
+    "expression": "grel:value.partition(\"Trefwoord:\")[-1].chomp(\".\")",
+    "onError": "set-to-blank",
+    "newColumnName": "Trefwoord",
+    "columnInsertIndex": 2,
+    "description": "Create column Trefwoord at index 2 based on column Column 2 using expression grel:value.partition(\"Trefwoord:\")[-1].chomp(\".\")"
+  }
+]
