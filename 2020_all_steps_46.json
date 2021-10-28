@@ -1,0 +1,506 @@
+[
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "Column 1",
+    "expression": "grel:value.replace(/\\uF04A/, \"#XX\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "Text transform on cells in column Column 1 using expression grel:value.replace(/\\uF04A/, \"#XX\")"
+  },
+  {
+    "op": "core/column-addition",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "baseColumnName": "Column 2",
+    "expression": "grel:value.partition(\"Trefwoord:\")[-1].chomp(\".\")",
+    "onError": "set-to-blank",
+    "newColumnName": "Trefwoord",
+    "columnInsertIndex": 2,
+    "description": "Create column Trefwoord at index 2 based on column Column 2 using expression grel:value.partition(\"Trefwoord:\")[-1].chomp(\".\")"
+  },
+  {
+    "op": "core/column-addition",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "baseColumnName": "Column 2",
+    "expression": "grel:value.partition(/Typografie:/)[-1].chomp(\".\")",
+    "onError": "set-to-blank",
+    "newColumnName": "Typografie",
+    "columnInsertIndex": 2,
+    "description": "Create column Typografie at index 2 based on column Column 2 using expression grel:value.partition(/Typografie:/)[-1].chomp(\".\")"
+  },
+  {
+    "op": "core/column-addition",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "baseColumnName": "Column 2",
+    "expression": "grel:value.partition(\"Tekst:\")[-1].chomp(\".\")",
+    "onError": "set-to-blank",
+    "newColumnName": "Auteur",
+    "columnInsertIndex": 2,
+    "description": "Create column Auteur at index 2 based on column Column 2 using expression grel:value.partition(\"Tekst:\")[-1].chomp(\".\")"
+  },
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "Column 2",
+    "expression": "value.replace(/(Trefwoord|Typografie|Tekst):.*/,'')",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "Text transform on cells in column Column 2 using expression value.replace(/(Trefwoord|Typografie|Tekst):.*/,'')"
+  },
+  {
+    "op": "core/column-rename",
+    "oldColumnName": "Column 2",
+    "newColumnName": "Titel",
+    "description": "Rename column Column 2 to Titel"
+  },
+  {
+    "op": "core/column-addition",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "baseColumnName": "Titel",
+    "expression": "grel:value.partition(/ISBN/)[-1].chomp(\".\").chomp('-')",
+    "onError": "set-to-blank",
+    "newColumnName": "ISBN",
+    "columnInsertIndex": 2,
+    "description": "Create column ISBN at index 2 based on column Titel using expression grel:value.partition(/ISBN/)[-1].chomp(\".\").chomp('-')"
+  },
+  {
+    "op": "core/column-addition",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "baseColumnName": "Titel",
+    "expression": "grel:value.partition(/EAN/)[-1].chomp(\".\").chomp('-')",
+    "onError": "set-to-blank",
+    "newColumnName": "EAN",
+    "columnInsertIndex": 2,
+    "description": "Create column EAN at index 2 based on column Titel using expression grel:value.partition(/EAN/)[-1].chomp(\".\").chomp('-')"
+  },
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "Titel",
+    "expression": "grel:value.replace(/(ISBN|EAN).*/, '')",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "Text transform on cells in column Titel using expression grel:value.replace(/(ISBN|EAN).*/, '')"
+  },
+  {
+    "op": "core/multivalued-cell-join",
+    "columnName": "EAN",
+    "keyColumnName": "Column 1",
+    "separator": "",
+    "description": "Join multi-valued cells in column EAN"
+  },
+  {
+    "op": "core/multivalued-cell-join",
+    "columnName": "ISBN",
+    "keyColumnName": "Column 1",
+    "separator": "",
+    "description": "Join multi-valued cells in column ISBN"
+  },
+  {
+    "op": "core/multivalued-cell-join",
+    "columnName": "Trefwoord",
+    "keyColumnName": "Column 1",
+    "separator": "",
+    "description": "Join multi-valued cells in column Trefwoord"
+  },
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Titel",
+    "expression": "grel:if(isBlank(value), row.index+1, value)",
+    "onError": "set-to-blank",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "Text transform on cells in column Titel using expression grel:if(isBlank(value), row.index+1, value)"
+  },
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Titel",
+    "expression": "grel:if(isNumeric(row.record.cells[\"Titel\"].value[1]), value, row.record.cells[\"Titel\"].value[0,2].join(\" \"))",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "Text transform on cells in column Titel using expression grel:if(isNumeric(row.record.cells[\"Titel\"].value[1]), value, row.record.cells[\"Titel\"].value[0,2].join(\" \"))"
+  },
+  {
+    "op": "core/blank-down",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Titel",
+    "description": "Blank down cells in column Titel"
+  },
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "Titel",
+    "expression": "grel:if(isNumeric(value), '', value)",
+    "onError": "set-to-blank",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "Text transform on cells in column Titel using expression grel:if(isNumeric(value), '', value)"
+  },
+  {
+    "op": "core/column-addition",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "baseColumnName": "Column 3",
+    "expression": "grel:value.partition(\"Uitg.\")[-1]",
+    "onError": "set-to-blank",
+    "newColumnName": "Uitgever",
+    "columnInsertIndex": 8,
+    "description": "Create column Uitgever at index 8 based on column Column 3 using expression grel:value.partition(\"Uitg.\")[-1]"
+  },
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "Column 3",
+    "expression": "grel:value.replace(/Uitg\\..*/, '')",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "Text transform on cells in column Column 3 using expression grel:value.replace(/Uitg\\..*/, '')"
+  },
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "Uitgever",
+    "expression": "value.trim()",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "Text transform on cells in column Uitgever using expression value.trim()"
+  },
+  {
+    "op": "core/column-move",
+    "columnName": "Column 4",
+    "index": 8,
+    "description": "Move column Column 4 to position 8"
+  },
+  {
+    "op": "core/column-move",
+    "columnName": "Uitgever",
+    "index": 10,
+    "description": "Move column Uitgever to position 10"
+  },
+  {
+    "op": "core/column-addition",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "baseColumnName": "Column 4",
+    "expression": "grel:value.match(/(\\d{4})/)[0]",
+    "onError": "set-to-blank",
+    "newColumnName": "Jaar van uitgave",
+    "columnInsertIndex": 9,
+    "description": "Create column Jaar van uitgave at index 9 based on column Column 4 using expression grel:value.match(/(\\d{4})/)[0]"
+  },
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "Column 4",
+    "expression": "grel:value.replace(/\\d{4}/, '')",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "Text transform on cells in column Column 4 using expression grel:value.replace(/\\d{4}/, '')"
+  },
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "Jaar van uitgave",
+    "expression": "join ([coalesce(cells['Jaar van uitgave'].value,''),coalesce(cells['Column 5'].value,'')],'')",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "Text transform on cells in column Jaar van uitgave using expression join ([coalesce(cells['Jaar van uitgave'].value,''),coalesce(cells['Column 5'].value,'')],'')"
+  },
+  {
+    "op": "core/column-removal",
+    "columnName": "Column 5",
+    "description": "Remove column Column 5"
+  },
+  {
+    "op": "core/column-addition",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "baseColumnName": "Column 3",
+    "expression": "join ([coalesce(cells['Column 3'].value,''),coalesce(cells['Column 4'].value,'')],'* ')",
+    "onError": "keep-original",
+    "newColumnName": "Fotograaf",
+    "columnInsertIndex": 8,
+    "description": "Create column Fotograaf at index 8 based on column Column 3 using expression join ([coalesce(cells['Column 3'].value,''),coalesce(cells['Column 4'].value,'')],'* ')"
+  },
+  {
+    "op": "core/column-reorder",
+    "columnNames": [
+      "Column 1",
+      "Titel",
+      "EAN",
+      "ISBN",
+      "Auteur",
+      "Typografie",
+      "Trefwoord",
+      "Fotograaf",
+      "Jaar van uitgave",
+      "Uitgever"
+    ],
+    "description": "Reorder columns"
+  },
+  {
+    "op": "core/multivalued-cell-join",
+    "columnName": "Fotograaf",
+    "keyColumnName": "Column 1",
+    "separator": "* ",
+    "description": "Join multi-valued cells in column Fotograaf"
+  },
+  {
+    "op": "core/column-addition",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "baseColumnName": "Titel",
+    "expression": "grel:if(isNonBlank(row.record.cells[\"Titel\"].value[2]), row.record.cells[\"Titel\"].value[1,4].join(\" *\"), '')",
+    "onError": "set-to-blank",
+    "newColumnName": "f",
+    "columnInsertIndex": 2,
+    "description": "Create column f at index 2 based on column Titel using expression grel:if(isNonBlank(row.record.cells[\"Titel\"].value[2]), row.record.cells[\"Titel\"].value[1,4].join(\" *\"), '')"
+  },
+  {
+    "op": "core/blank-down",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "f",
+    "description": "Blank down cells in column f"
+  },
+  {
+    "op": "core/multivalued-cell-join",
+    "columnName": "Titel",
+    "keyColumnName": "Column 1",
+    "separator": "**",
+    "description": "Join multi-valued cells in column Titel"
+  },
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "Titel",
+    "expression": "grel:value.replace(/(\\*\\*.*)/, \"\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "Text transform on cells in column Titel using expression grel:value.replace(/(\\*\\*.*)/, \"\")"
+  },
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "Fotograaf",
+    "expression": "join ([coalesce(cells['Fotograaf'].value,''),coalesce(cells['f'].value,'')],'*')",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "Text transform on cells in column Fotograaf using expression join ([coalesce(cells['Fotograaf'].value,''),coalesce(cells['f'].value,'')],'*')"
+  },
+  {
+    "op": "core/column-reorder",
+    "columnNames": [
+      "Column 1",
+      "Titel",
+      "EAN",
+      "ISBN",
+      "Auteur",
+      "Typografie",
+      "Trefwoord",
+      "Fotograaf",
+      "Jaar van uitgave",
+      "Uitgever"
+    ],
+    "description": "Reorder columns"
+  },
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "Fotograaf",
+    "expression": "grel:value.replace(/\\.?\\* \\*/,'')",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "Text transform on cells in column Fotograaf using expression grel:value.replace(/\\.?\\* \\*/,'')"
+  },
+  {
+    "op": "core/multivalued-cell-split",
+    "columnName": "Fotograaf",
+    "keyColumnName": "Column 1",
+    "mode": "separator",
+    "separator": "*",
+    "regex": false,
+    "description": "Split multi-valued cells in column Fotograaf"
+  },
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "Fotograaf",
+    "expression": "value.trim()",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "Text transform on cells in column Fotograaf using expression value.trim()"
+  },
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "Fotograaf",
+    "expression": "grel:value.replace(\".\", \". \").trim().chomp(\".\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "Text transform on cells in column Fotograaf using expression grel:value.replace(\".\", \". \").trim().chomp(\".\")"
+  },
+  {
+    "op": "core/column-addition",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "baseColumnName": "Uitgever",
+    "expression": "grel:value.replace(/(.*)(Amsterdam|Rotterdam|Den Haag|Amersfoort|Deventer|Helmond|Lochem|Parijs)\\.?$/, \"$2\")",
+    "onError": "set-to-blank",
+    "newColumnName": "Plaats van Uitgave",
+    "columnInsertIndex": 10,
+    "description": "Create column Plaats van Uitgave at index 10 based on column Uitgever using expression grel:value.replace(/(.*)(Amsterdam|Rotterdam|Den Haag|Amersfoort|Deventer|Helmond|Lochem|Parijs)\\.?$/, \"$2\")"
+  },
+  {
+    "op": "core/text-transform",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "Uitgever",
+    "expression": "grel:value.replace(/(Amsterdam|Rotterdam|Den Haag|Amersfoort|Deventer|Helmond|Lochem|Parijs)(\\.?)$/, \"\")",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10,
+    "description": "Text transform on cells in column Uitgever using expression grel:value.replace(/(Amsterdam|Rotterdam|Den Haag|Amersfoort|Deventer|Helmond|Lochem|Parijs)(\\.?)$/, \"\")"
+  },
+  {
+    "op": "core/multivalued-cell-join",
+    "columnName": "Auteur",
+    "keyColumnName": "Column 1",
+    "separator": "",
+    "description": "Join multi-valued cells in column Auteur"
+  },
+  {
+    "op": "core/multivalued-cell-join",
+    "columnName": "Typografie",
+    "keyColumnName": "Column 1",
+    "separator": "",
+    "description": "Join multi-valued cells in column Typografie"
+  },
+  {
+    "op": "core/multivalued-cell-join",
+    "columnName": "Uitgever",
+    "keyColumnName": "Column 1",
+    "separator": "",
+    "description": "Join multi-valued cells in column Uitgever"
+  },
+  {
+    "op": "core/multivalued-cell-join",
+    "columnName": "Plaats van Uitgave",
+    "keyColumnName": "Column 1",
+    "separator": "",
+    "description": "Join multi-valued cells in column Plaats van Uitgave"
+  },
+  {
+    "op": "core/mass-edit",
+    "engineConfig": {
+      "facets": [],
+      "mode": "record-based"
+    },
+    "columnName": "Fotograaf",
+    "expression": "value",
+    "edits": [
+      {
+        "from": [
+          "Cas Oorthuys",
+          "Cas oorthuys"
+        ],
+        "fromBlank": false,
+        "fromError": false,
+        "to": "Cas Oorthuys"
+      }
+    ],
+    "description": "Mass edit cells in column Fotograaf"
+  }
+]
