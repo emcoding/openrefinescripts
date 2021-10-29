@@ -35,19 +35,6 @@ Create column Jaar van Uitgave at index 6 based on column Column 4 using express
     "description": "Text transform on cells in column Jaar van Uitgave using expression join ([coalesce(cells['Jaar van Uitgave'].value,''),coalesce(cells['Column 5'].value,'')],'')"
   },
   {
-    "op": "core/text-transform",
-    "engineConfig": {
-      "facets": [],
-      "mode": "row-based"
-    },
-    "columnName": "Jaar van Uitgave",
-    "expression": "value.toDate(yyyy)",
-    "onError": "keep-original",
-    "repeat": false,
-    "repeatCount": 10,
-    "description": "Text transform on cells in column Jaar van Uitgave using expression value.toDate(yyyy)"
-  },
-  {
     "op": "core/column-removal",
     "columnName": "Column 5",
     "description": "Remove column Column 5"
