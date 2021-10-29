@@ -2,7 +2,7 @@
 // De eerste stap creeert een nieuwe col door een pattern van 4 cijfers te verplaatsen naar een nieuwe column, "Jaar van Uitgave"   
 Create column Jaar van Uitgave at index 6 based on column Column 4 using expression grel:value.match(/(.?)(\d{4})(.?)/)[1]
 // stap 2 voegt de nieuwe col met jaartallen, samen met de oude col (5) waar alleen jaartallen in stonden.
-// stap 3 maakt van de jaartallen weer numbers (waarom eigenlijk)
+// stap 3 maakt van de jaartallen Date types 
 // stap 4: nu kan col 5 weg, dat is de col die alleen jaartallen had
 // stap5: nu moeten de jaartallen nog weg uit de oude col 4 (col-> edit cells -> transform: replace(value, /\d{4}/, '')
 
@@ -41,11 +41,11 @@ Create column Jaar van Uitgave at index 6 based on column Column 4 using express
       "mode": "row-based"
     },
     "columnName": "Jaar van Uitgave",
-    "expression": "value.toNumber()",
+    "expression": "value.toDate(yyyy)",
     "onError": "keep-original",
     "repeat": false,
     "repeatCount": 10,
-    "description": "Text transform on cells in column Jaar van Uitgave using expression value.toNumber()"
+    "description": "Text transform on cells in column Jaar van Uitgave using expression value.toDate(yyyy)"
   },
   {
     "op": "core/column-removal",
